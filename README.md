@@ -14,7 +14,7 @@
 |Name|Role|
 |----|----|
 |Bercasio, Vincent Jon| - |
-|Lampa, Kenzo Nicolo| - |
+|Lampa, Kenzo Nicolo| pogi (test)|
 |Reyes, Darylle Joshua| - |
 |Sampao, Sebastian James| - |
 |Untalan, Chaurell Eichen| - |

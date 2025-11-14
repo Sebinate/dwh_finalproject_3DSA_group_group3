@@ -2,3 +2,6 @@ pandas
 pyarrow
 numpy
 psycopg2-binary
+sqlalchemy
+jupyterlab
+openpyxl

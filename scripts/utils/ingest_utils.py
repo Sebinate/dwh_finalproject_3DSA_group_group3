@@ -1,14 +1,11 @@
 import pandas as pd
 from typing import Iterator
-import json
 import pickle as pkl
 from bs4 import BeautifulSoup
 import pyarrow.parquet as pq
-from pyarrow import RecordBatch
 
 def csv_reader(path: str, chunksize: int = 10_000) -> Iterator[pd.DataFrame]:
     data = pd.read_csv(path, chunksize = chunksize)
-    
     return data
 
 def html_reader(path: str) -> list[pd.DataFrame]:
@@ -35,11 +32,19 @@ def parquet_reader(path: str, chunksize: int = 10_000) -> Iterator[pd.DataFrame]
     for batch in batches:
         yield batch.to_pandas()
 
-def json_reader(path: str, ) -> None:
-    pass
+def json_reader(path: str) -> pd.DataFrame:
+    data = pd.read_json(path, orient = "records")
+    return data
 
-def pkl_reader(path: str, ) -> None:
-    pass
+def pkl_reader(path: str) -> pd.DataFrame:
+    with open(path, 'rb') as file:
+        data = pkl.load(file)
 
-def xlsx_reader(path: str, ) -> None:
+    return data
+
+def xlsx_reader(path: str) -> pd.DataFrame:
+    data = pd.read_excel(path, engine = "openpyxl")
+    return data
+
+if __name__ == "__main__":
     pass

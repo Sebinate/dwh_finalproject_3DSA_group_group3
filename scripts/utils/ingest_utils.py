@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import pyarrow.parquet as pq
 
 def csv_reader(path: str, chunksize: int = 10_000) -> Iterator[pd.DataFrame]:
-    data = pd.read_csv(path, chunksize = chunksize)
+    data = pd.read_csv(path, chunksize = chunksize, sep = None)
     return data
 
 def html_reader(path: str) -> list[pd.DataFrame]:

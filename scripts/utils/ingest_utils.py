@@ -23,7 +23,7 @@ def html_reader(path: str) -> list[pd.DataFrame]:
         data = pd.read_html(str(table))[0]
         dfs.append(data)
         
-    return dfs
+    return dfs[0]
 
 def parquet_reader(path: str, chunksize: int = 10_000) -> Iterator[pd.DataFrame]:
     pf = pq.ParquetFile(path)
@@ -45,6 +45,25 @@ def pkl_reader(path: str) -> pd.DataFrame:
 def xlsx_reader(path: str) -> pd.DataFrame:
     data = pd.read_excel(path, engine = "openpyxl")
     return data
+
+def file_type_reader(file_type: str):
+    if file_type == "csv":
+        return csv_reader
+    
+    elif file_type == "parquet":
+        return parquet_reader
+    
+    elif file_type == "xlsx":
+        return xlsx_reader
+    
+    elif file_type == "pickle" or file_type == "pkl":
+        return pkl_reader
+    
+    elif file_type == "html":
+        return html_reader
+    
+    elif file_type == "json":
+        return json_reader
 
 if __name__ == "__main__":
     pass

@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import pyarrow.parquet as pq
 
 def csv_reader(path: str, chunksize: int = 10_000) -> Iterator[pd.DataFrame]:
-    data = pd.read_csv(path, chunksize = chunksize, sep = None)
+    data = pd.read_csv(path, chunksize = chunksize, sep = None, index_col = False)
     return data
 
 def html_reader(path: str) -> list[pd.DataFrame]:
@@ -66,4 +66,4 @@ def file_type_reader(file_type: str):
         return json_reader
 
 if __name__ == "__main__":
-    pass
+    print(html_reader(r"C:\Users\User\dwh_finalproject_3DSA_group_group3\data\Project Dataset-20241024T131910Z-001\Operations Department\order_delays.html"))

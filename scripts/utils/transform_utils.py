@@ -21,3 +21,10 @@ def lowercaseinator(text:str) -> str:
     text = str(text)
     text = text.lower
     return text
+
+def columndropinator(df: pd.DataFrame) -> pd.DataFrame:
+    if "Unnamed: 0" in df.columns:
+        df = df.drop(columns=["Unnamed: 0"])
+    else:
+        print("'Unnamed: 0' is not present here")
+    return df

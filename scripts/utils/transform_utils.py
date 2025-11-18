@@ -9,36 +9,39 @@ def whitespacedestroyer(text:str) -> str:
     text = text.strip('_') #china_china 
     return text
 
-def numberextractor(text:str) -> float:
-    finder = re.search(r'\d+(\.\d+)?', str(text))
-    if finder:
-        return float(finder.group(0))
-    else:
-        #ibang function ba yung pag convert ng four to 4 etc?
-        return 0
+def numberextractinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
+    if column in df.columns:
+        df[column] = df[column].astype(str).str.replace(r'[^0-9]', '', regex=True)
+    return df
 
-def lowercaseinator(text:str) -> str:
-    text = str(text)
-    text = text.lower
-    return text
+def floatinator(df: pd.DataFrame, column: str) -> pd.DataFrame: #also removes periods btw
+    if column in df.columns:
+        df[column] = pd.to_numeric(df[column], errors='coerce')
+    else:
+        print(f"Column '{column}' does not exist in the DataFrame.")
+        
+    return df
+
+def intinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
+    if column in df.columns:
+        df[column] = pd.to_numeric(df[column], errors='coerce').astype(int)
+    else:
+        print(f"Column '{column}' does not exist in the DataFrame.")
+    return df
+
+def percentinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
+    if column in df.columns:
+        df[column] = (df[column] / 100).round(2)
+    return df
 
 def columndropinator(df: pd.DataFrame) -> pd.DataFrame:
     if "Unnamed: 0" in df.columns:
         df = df.drop(columns=["Unnamed: 0"])
-    else:
-        print("'Unnamed: 0' is not present here")
     return df
 
 def stringinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
     if column in df.columns:
         df[column] = df[column].astype(str)
-    else:
-        print(f"Column '{column}' does not exist in the DataFrame.")
-    return df
-
-def floatinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
-    if column in df.columns:
-        df[column] = df[column].astype(float)
     else:
         print(f"Column '{column}' does not exist in the DataFrame.")
     return df
@@ -51,4 +54,25 @@ def datetimeinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
             print(f"Error converting column '{column}' to datetime: {e}")
     else:
         print(f"Column '{column}' does not exist in the DataFrame.")
+    return df
+
+def unduplicateinator(df: pd.DataFrame, columns) -> pd.DataFrame:
+    df = df.drop_duplicates(subset=columns)
+    return df
+
+def boolinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
+    if column in df.columns:
+        truthy = {"true", "1", "yes", "y", "t"}
+        falsy = {"false", "0", "no", "n", "f"}
+        df[column] = (df[column]
+            .astype(str)
+            .str.strip()
+            .str.lower()
+            .map(lambda x: True if x in truthy
+                           else False if x in falsy
+                           else pd.NA)
+            .astype("boolean"))
+    else:
+        print(f"Column '{column}' does not exist in the DataFrame.")
+
     return df

@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import glob
+from scripts.utils import transform_utils
 from scripts.utils import ingest_utils
 from scripts.utils import utils
 from sqlalchemy import inspect
@@ -31,10 +32,18 @@ else:
 
         if file_type == "csv" or file_type == "parquet":
             for batch in reader(file_path):
-                # Insert cleaning here
+                batch = transform_utils.columndropinator(batch)
+                batch = transform_utils.unduplicateinator(batch, "order_id")  
+                batch = transform_utils.stringinator(batch, "order_id")
+                batch = transform_utils.stringinator(batch, "product_name")
+                batch = transform_utils.stringinator(batch, "product_id")
                 batch.to_sql(name = staging_table_name, con = engine, if_exists = "append")
 
         else:
             data = reader(file_path)
-            # Insert cleaning here
+            data = transform_utils.columndropinator(data)
+            data = transform_utils.unduplicateinator(data, "order_id")  
+            batch = transform_utils.stringinator(batch, "order_id")
+            batch = transform_utils.stringinator(batch, "product_name")
+            batch = transform_utils.stringinator(batch, "product_id")
             data.to_sql(name = staging_table_name, con = engine, if_exists = "append")

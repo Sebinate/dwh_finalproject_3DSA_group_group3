@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import pyarrow.parquet as pq
 
 def csv_reader(path: str, chunksize: int = 10_000) -> Iterator[pd.DataFrame]:
-    data = pd.read_csv(path, chunksize = chunksize)
+    data = pd.read_csv(path, chunksize = chunksize, sep = None, index_col = False)
     return data
 
 def html_reader(path: str) -> list[pd.DataFrame]:
@@ -23,7 +23,7 @@ def html_reader(path: str) -> list[pd.DataFrame]:
         data = pd.read_html(str(table))[0]
         dfs.append(data)
         
-    return dfs
+    return dfs[0]
 
 def parquet_reader(path: str, chunksize: int = 10_000) -> Iterator[pd.DataFrame]:
     pf = pq.ParquetFile(path)
@@ -46,5 +46,24 @@ def xlsx_reader(path: str) -> pd.DataFrame:
     data = pd.read_excel(path, engine = "openpyxl")
     return data
 
+def file_type_reader(file_type: str):
+    if file_type == "csv":
+        return csv_reader
+    
+    elif file_type == "parquet":
+        return parquet_reader
+    
+    elif file_type == "xlsx":
+        return xlsx_reader
+    
+    elif file_type == "pickle" or file_type == "pkl":
+        return pkl_reader
+    
+    elif file_type == "html":
+        return html_reader
+    
+    elif file_type == "json":
+        return json_reader
+
 if __name__ == "__main__":
-    pass
+    print(html_reader(r"C:\Users\User\dwh_finalproject_3DSA_group_group3\data\Project Dataset-20241024T131910Z-001\Operations Department\order_delays.html"))

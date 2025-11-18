@@ -6,8 +6,8 @@ RUN pip install -r requirements.txt
 
 COPY scripts/utils/ /app/scripts/utils
 
-COPY infra/ingestion/enterprise_dept/enterprise_dept_ingest.py .
+COPY infra/ingestion/business_dept/product_list/product_list_ingest.py .
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 
-CMD [ "python", "enterprise_dept_ingest.py" ]
+CMD [ "python", "product_list_ingest.py" ]

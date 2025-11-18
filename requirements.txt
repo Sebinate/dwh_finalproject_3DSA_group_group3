@@ -3,6 +3,7 @@ pyarrow
 numpy
 psycopg2-binary
 sqlalchemy
-jupyterlab
+# jupyterlab
 openpyxl
 lxml
+bs4

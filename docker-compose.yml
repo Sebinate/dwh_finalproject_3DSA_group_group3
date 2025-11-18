@@ -16,11 +16,91 @@ services:
       timeout: 5s
       retries: 5
 
-  business-ingestor:
-    container_name: business_ingest_service
+  # product_list-ingestor:
+  #   container_name: product_list_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/business_dept/product_list/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # user_credit-ingestor:
+  #   container_name: user_credit_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/customer_dept/user_credit_card/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # user_data-ingestor:
+  #   container_name: user_data_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/customer_dept/user_data/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # user_job-ingestor:
+  #   container_name: user_job_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/customer_dept/user_job/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # merchant_data-ingestor:
+  #   container_name: merchant_data_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/enterprise_dept/merchant_data/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  order_w_merchant-ingestor:
+    container_name: order_w_merchant_ingest_service
     build:
       context: .
-      dockerfile: ./infra/ingestion/business_dept/Dockerfile
+      dockerfile: ./infra/ingestion/enterprise_dept/order_with_merchant/Dockerfile
     environment:
       DB_HOST: db
       DB_USER: myuser
@@ -32,70 +112,118 @@ services:
     depends_on:
       db:
         condition: service_healthy
-  customer-ingestor:
-    container_name: customer_ingest_service
-    build:
-      context: .
-      dockerfile: ./infra/ingestion/customer_dept/Dockerfile
-    environment:
-      DB_HOST: db
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
-      DB_NAME: mydatabase
-      DB_PORT: 5432
-    volumes:
-      - ./data:/app/data
-    depends_on:
-      db:
-        condition: service_healthy
-  enterprise-ingestor:
-    container_name: enterprise_ingest_service
-    build:
-      context: .
-      dockerfile: ./infra/ingestion/enterprise_dept/Dockerfile
-    environment:
-      DB_HOST: db
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
-      DB_NAME: mydatabase
-      DB_PORT: 5432
-    volumes:
-      - ./data:/app/data
-    depends_on:
-      db:
-        condition: service_healthy
-  marketing-ingestor:
-    container_name: marketing_ingest_service
-    build:
-      context: .
-      dockerfile: ./infra/ingestion/marketing_dept/Dockerfile
-    environment:
-      DB_HOST: db
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
-      DB_NAME: mydatabase
-      DB_PORT: 5432
-    volumes:
-      - ./data:/app/data
-    depends_on:
-      db:
-        condition: service_healthy
-  operations-ingestor:
-    container_name: operations_ingest_service
-    build:
-      context: .
-      dockerfile: ./infra/ingestion/operations_dept/Dockerfile
-    environment:
-      DB_HOST: db
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
-      DB_NAME: mydatabase
-      DB_PORT: 5432
-    volumes:
-      - ./data:/app/data
-    depends_on:
-      db:
-        condition: service_healthy
+  # staff_data-ingestor:
+  #   container_name: staff_data_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/enterprise_dept/staff_data/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # campaign_data-ingestor:
+  #   container_name: campaign_data_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/marketing_dept/campaign_data/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # transactional_campaign_data-ingestor:
+  #   container_name: transactional_campaign_data_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/marketing_dept/transactional_campaign_data/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # line_item_prices-ingestor:
+  #   container_name: line_item_prices_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/operations_dept/line_item_prices/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # line_item_products-ingestor:
+  #   container_name: line_item_products_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/operations_dept/line_item_products/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # order_data-ingestor:
+  #   container_name: order_data_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/operations_dept/order_data/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # order_delays-ingestor:
+  #   container_name: order_delays_ingest_service
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/ingestion/operations_dept/order_delays/Dockerfile
+  #   environment:
+  #     DB_HOST: db
+  #     DB_USER: myuser
+  #     DB_PASSWORD: mypassword
+  #     DB_NAME: mydatabase
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./data:/app/data
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
 
 volumes:
   pgdata:

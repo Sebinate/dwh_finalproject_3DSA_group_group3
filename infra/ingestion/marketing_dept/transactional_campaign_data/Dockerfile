@@ -6,8 +6,8 @@ RUN pip install -r requirements.txt
 
 COPY scripts/utils/ /app/scripts/utils
 
-COPY infra/ingestion/business_dept/business_dept_ingest.py .
+COPY infra/ingestion/marketing_dept/transactional_campaign_data/transactional_campaign_data_ingest.py .
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 
-CMD [ "python", "business_dept_ingest.py" ]
+CMD [ "python", "transactional_campaign_data_ingest.py" ]

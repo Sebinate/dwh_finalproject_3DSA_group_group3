@@ -3,6 +3,7 @@ from typing import Iterator
 import pickle as pkl
 from bs4 import BeautifulSoup
 import pyarrow.parquet as pq
+from sqlalchemy import create_engine, Engine, inspect
 
 def csv_reader(path: str, chunksize: int = 10_000) -> Iterator[pd.DataFrame]:
     data = pd.read_csv(path, chunksize = chunksize, sep = None, index_col = False)

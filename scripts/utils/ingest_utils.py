@@ -67,25 +67,6 @@ def file_type_reader(file_type: str):
     
     elif file_type == "json":
         return json_reader
-    
-def column_renaminator(df: pd.DataFrame) -> pd.DataFrame:
-    renames = {
-        'price': 'product_price',
-    }
-
-    df = df.rename(columns=renames)
-    print(df.columns)
-
-    return df
-
-def nullinator(df: pd.DataFrame) -> pd.DataFrame:
-    fill_rules = {
-        "product_type": "Uncategorized",
-    }
-
-    df = df.fillna(value=fill_rules)
-
-    return df
 
 class Ingest:
     def __init__(self, 
@@ -126,7 +107,6 @@ class Ingest:
                         data = cleaner[0](data, *cleaner[1:])
                     else:
                         data = cleaner[0](data)
-                    data = cleaner[0](data, *cleaner[:-1])
                 data.to_sql(name = staging_table_name, con = self.engine, if_exists = "append")
 
 if __name__ == "__main__":

@@ -76,3 +76,22 @@ def boolinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
         print(f"Column '{column}' does not exist in the DataFrame.")
 
     return df
+
+def column_renaminator(df: pd.DataFrame) -> pd.DataFrame:
+    renames = {
+        'price': 'product_price',
+    }
+
+    df = df.rename(columns=renames)
+    print(df.columns)
+
+    return df
+
+def nullinator(df: pd.DataFrame) -> pd.DataFrame:
+    fill_rules = {
+        "product_type": "Uncategorized",
+    }
+
+    df = df.fillna(value=fill_rules)
+
+    return df

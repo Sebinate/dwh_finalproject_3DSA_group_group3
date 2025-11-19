@@ -36,9 +36,9 @@ engine = utils.connect()
 
 file_paths = glob.glob(file_match_path, recursive = True)
 
-cleaners = [(transform_utils.columndropinator),
-            (column_renaminator),
-            (nullinator),
+cleaners = [(transform_utils.columndropinator,),
+            (transform_utils.column_renaminator,),
+            (transform_utils.nullinator,),
             (transform_utils.unduplicateinator, "product_id"),
             (transform_utils.stringinator, "product_id"),
             (transform_utils.stringinator, "product_name"),

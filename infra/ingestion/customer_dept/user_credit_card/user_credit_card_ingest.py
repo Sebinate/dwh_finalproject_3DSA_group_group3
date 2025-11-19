@@ -43,6 +43,7 @@ else:
 
         if file_type == "csv" or file_type == "parquet":
             for batch in reader(file_path):
+                batch = column_renaminator(batch)
                 batch = transform_utils.columndropinator(batch)
                 batch = transform_utils.unduplicateinator(batch, "user_id")  
                 batch = transform_utils.stringinator(batch, "user_id")
@@ -55,6 +56,7 @@ else:
 
         else:
             data = reader(file_path)
+            data = column_renaminator(data)
             data = transform_utils.columndropinator(data)
             data = transform_utils.unduplicateinator(data, "product_id")
             data = transform_utils.stringinator(data, "user_id")

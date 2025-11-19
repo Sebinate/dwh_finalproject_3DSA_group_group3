@@ -51,6 +51,8 @@ else:
         if file_type == "csv" or file_type == "parquet":
             #Remove once in production
             for batch in reader(file_path):
+                batch = column_renaminator(batch)
+                batch = nullinator(batch)
                 batch = transform_utils.columndropinator(batch)
                 batch = transform_utils.nullinator(batch)
                 batch = transform_utils.unduplicateinator(batch, "product_id")  
@@ -63,9 +65,11 @@ else:
 
         else:
             data = reader(file_path)
-            data = transform_utils.columndropinator(batch)
-            data = transform_utils.nullinator(batch)
-            data = transform_utils.unduplicateinator(batch, "product_id")  
+            data = column_renaminator(data)
+            data = nullinator(data)
+            data = transform_utils.columndropinator(data)
+            data = transform_utils.nullinator(data)
+            data = transform_utils.unduplicateinator(data, "product_id")  
             data = transform_utils.stringinator(data, "product_id")
             data = transform_utils.stringinator(data, "product_name")
             data = transform_utils.stringinator(data, "product_type")

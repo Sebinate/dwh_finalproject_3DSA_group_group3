@@ -44,6 +44,7 @@ else:
         if file_type == "csv" or file_type == "parquet":
             for batch in reader(file_path):
                 batch = transform_utils.columndropinator(batch)
+                batch = column_renaminator(batch)
                 batch = transform_utils.unduplicateinator(batch, "campaign_id")  
                 batch = transform_utils.datetimeinator(batch, "transact_date")
                 batch = transform_utils.stringinator(batch, "campaign_id")
@@ -56,6 +57,7 @@ else:
         else:
             data = reader(file_path)
             data = transform_utils.columndropinator(batch)
+            data = column_renaminator(data)
             data = transform_utils.unduplicateinator(batch, "campaign_id")  
             data = transform_utils.datetimeinator(data, "transact_date")
             data = transform_utils.stringinator(data, "campaign_id")

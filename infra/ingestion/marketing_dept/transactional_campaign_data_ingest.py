@@ -6,17 +6,6 @@ from scripts.utils import ingest_utils
 from scripts.utils import utils
 from sqlalchemy import inspect
 
-def column_renaminator(df: pd.DataFrame) -> pd.DataFrame:
-    renames = {
-        'transaction_date': 'transact_date',
-        'estimated arrival': 'transact_estimated_arrival',
-        'availed': 'transact_availed',
-    }
-
-    df = df.rename(columns=renames)
-
-    return df
-
 # Make this dynamic in the future
 PATH = r"data/Project Dataset-20241024T131910Z-001/Marketing Department"
 pattern = r"transactional_campaign_data*"

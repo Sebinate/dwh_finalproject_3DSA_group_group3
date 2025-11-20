@@ -14,33 +14,18 @@ file_match_path = os.path.join(PATH, pattern)
 #Connecting to db
 engine = utils.connect()
 
-file_list = glob.glob(file_match_path, recursive = True)
+file_paths = glob.glob(file_match_path, recursive = True)
 
-if not file_list:
-    print("No new files found")
+cleaners = [(transform_utils.columndropinator,),
+            (transform_utils.unduplicateinator, "order_id"),
+            (transform_utils.stringinator, "order_id"),
+            (transform_utils.stringinator, "merchant_id"),
+            (transform_utils.stringinator, "staff_id")
+            ]
 
-else:
-    staging_table_name = pattern.split("*")[0]
+product_ingester = ingest_utils.Ingest(engine = engine, 
+                               cleaners = cleaners, 
+                               file_paths = file_paths, 
+                               pattern = pattern)
 
-    for file_path in file_list:
-        file_type = file_path.split(r"\\")[-1].split(".")[-1]
-
-        reader = ingest_utils.file_type_reader(file_type)
-
-        if file_type == "csv" or file_type == "parquet":
-            for batch in reader(file_path):
-                batch = transform_utils.columndropinator(batch)
-                batch = transform_utils.unduplicateinator(batch, "order_id")  
-                batch = transform_utils.stringinator(batch, "order_id")
-                batch = transform_utils.stringinator(batch, "merchant_id")
-                batch = transform_utils.stringinator(batch, "staff_id")
-                batch.to_sql(name = staging_table_name, con = engine, if_exists = "append")
-
-        else:
-            data = reader(file_path)
-            data = transform_utils.columndropinator(data)
-            data = transform_utils.unduplicateinator(data, "order_id")  
-            data = transform_utils.stringinator(data, "order_id")
-            data = transform_utils.stringinator(data, "merchant_id")
-            data = transform_utils.stringinator(data, "staff_id")
-            data.to_sql(name = staging_table_name, con = engine, if_exists = "append")
+product_ingester.ingest()

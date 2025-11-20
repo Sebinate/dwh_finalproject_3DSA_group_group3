@@ -19,6 +19,7 @@ def floatinator(df: pd.DataFrame, column: str) -> pd.DataFrame: #also removes pe
         df[column] = pd.to_numeric(df[column], errors='coerce')
     else:
         print(f"Column '{column}' does not exist in the DataFrame.")
+        return
         
     return df
 
@@ -27,6 +28,7 @@ def intinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
         df[column] = pd.to_numeric(df[column], errors='coerce').astype(int)
     else:
         print(f"Column '{column}' does not exist in the DataFrame.")
+        return
     return df
 
 def percentinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
@@ -44,6 +46,7 @@ def stringinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
         df[column] = df[column].astype(str)
     else:
         print(f"Column '{column}' does not exist in the DataFrame.")
+        return
     return df
 
 def datetimeinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
@@ -52,8 +55,10 @@ def datetimeinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
             df[column] = pd.to_datetime(df[column], errors='coerce')
         except Exception as e:
             print(f"Error converting column '{column}' to datetime: {e}")
+            return
     else:
         print(f"Column '{column}' does not exist in the DataFrame.")
+        return
     return df
 
 def unduplicateinator(df: pd.DataFrame, columns) -> pd.DataFrame:
@@ -74,24 +79,16 @@ def boolinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
             .astype("boolean"))
     else:
         print(f"Column '{column}' does not exist in the DataFrame.")
-
+        return
     return df
 
-def column_renaminator(df: pd.DataFrame) -> pd.DataFrame:
-    renames = {
-        'price': 'product_price',
-    }
-
+def column_renaminator(df: pd.DataFrame, renames: dict) -> pd.DataFrame:
     df = df.rename(columns=renames)
     print(df.columns)
 
     return df
 
-def nullinator(df: pd.DataFrame) -> pd.DataFrame:
-    fill_rules = {
-        "product_type": "Uncategorized",
-    }
-
+def nullinator(df: pd.DataFrame, fill_rules: dict) -> pd.DataFrame:
     df = df.fillna(value=fill_rules)
 
     return df

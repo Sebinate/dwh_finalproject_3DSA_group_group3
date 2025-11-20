@@ -1,29 +1,8 @@
 import os
-import pandas as pd
 import glob
 from scripts.utils import transform_utils
 from scripts.utils import ingest_utils
 from scripts.utils import utils
-from sqlalchemy import inspect
-
-def column_renaminator(df: pd.DataFrame) -> pd.DataFrame:
-    renames = {
-        'price': 'product_price',
-    }
-
-    df = df.rename(columns=renames)
-    print(df.columns)
-
-    return df
-
-def nullinator(df: pd.DataFrame) -> pd.DataFrame:
-    fill_rules = {
-        "product_type": "Uncategorized",
-    }
-
-    df = df.fillna(value=fill_rules)
-
-    return df
 
 # Make this dynamic in the future
 PATH = r"data/Project Dataset-20241024T131910Z-001/Business Department"

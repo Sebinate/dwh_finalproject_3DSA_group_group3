@@ -1,3 +1,3 @@
-ALTER SCHEMA public RENAME TO staging;
+CREATE SCHEMA IF NOT EXISTS staging;
 
-CREATE SCHEMA warehouse;
+CREATE SCHEMA IF NOT EXISTS warehouse;

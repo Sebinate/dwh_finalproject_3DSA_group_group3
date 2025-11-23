@@ -1,5 +1,5 @@
 services:
-  db:
+  warehouse_db:
     image: postgres:13
     container_name: postgres_db
     environment:
@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: ./infra/ingestion/Dockerfile
     environment:
-      DB_HOST: db
+      DB_HOST: warehouse_db
       DB_USER: myuser
       DB_PASSWORD: mypassword
       DB_NAME: mydatabase
@@ -31,6 +31,22 @@ services:
     volumes:
       - ./data:/app/data
     depends_on:
-      - db
+      - warehouse_db
+
+  to_dw-service:
+    image: ShopZada/to_dw-service:latest
+    build:
+      context: .
+      dockerfile: ./infra/transform_to_dw/Dockerfile
+    environment:
+      DB_HOST: warehouse_db
+      DB_USER: myuser
+      DB_PASSWORD: mypassword
+      DB_NAME: mydatabase
+      DB_PORT: 5432
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - warehouse_db
 volumes:
   pgdata:

@@ -37,7 +37,7 @@ SELECT
 FROM (
     -- Generates 10 years of dates. Adjust start/end as needed.
     SELECT generate_series(
-        '2020-01-01'::DATE, 
+        '1970-01-01'::DATE, 
         '2030-12-31'::DATE, 
         '1 day'::INTERVAL
     ) AS datum

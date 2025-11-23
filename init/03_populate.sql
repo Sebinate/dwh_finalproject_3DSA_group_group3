@@ -1,5 +1,5 @@
 -- populate dim_date
-INSERT INTO dim_date
+INSERT INTO warehouse.dim_date
 SELECT
     -- 1. date_key (YYYYMMDD)
     TO_CHAR(datum, 'yyyymmdd')::INT,
@@ -45,11 +45,11 @@ FROM (
 ON CONFLICT (date_key) DO NOTHING;
 
 -- populate outriggers
-INSERT INTO dim_order_date
+INSERT INTO warehouse.dim_order_date
 SELECT * FROM dim_date
 ON CONFLICT (date_key) DO NOTHING;
 
-INSERT INTO dim_user_date
+INSERT INTO warehouse.dim_user_date
 SELECT
     -- 1. date_key (YYYYMMDD)
     TO_CHAR(datum, 'yyyymmdd')::INT,
@@ -94,10 +94,10 @@ FROM (
 ) date_sequence
 ON CONFLICT (date_key) DO NOTHING;
 
-INSERT INTO dim_staff_date
+INSERT INTO warehouse.dim_staff_date
 SELECT * FROM dim_date
 ON CONFLICT (date_key) DO NOTHING;
 
-INSERT INTO dim_merchant_date
+INSERT INTO warehouse.dim_merchant_date
 SELECT * FROM dim_date
 ON CONFLICT (date_key) DO NOTHING;

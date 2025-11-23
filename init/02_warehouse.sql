@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS dim_date (
     date_year             INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS dim_product_list (
+CREATE TABLE IF NOT EXISTS dim_product (
     product_key           INT PRIMARY KEY,        
     product_id            INT NOT NULL,
     product_name          VARCHAR(255),
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS dim_merchant (
     merchant_creation_date_key INT REFERENCES dim_merchant_date(date_key)
 );
 
-CREATE TABLE IF NOT EXISTS dim_table (
+CREATE TABLE IF NOT EXISTS dim_order (
     order_key                 INT PRIMARY KEY,    
     order_id                  INT NOT NULL,       
     order_transac_date        DATE NOT NULL,

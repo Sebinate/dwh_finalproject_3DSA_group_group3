@@ -12,12 +12,12 @@
 
 ## Members and Roles
 |Name|Role|
-|----|----|
-|Bercasio, Vincent Jon| - |
-|Lampa, Kenzo Nicolo| - |
-|Reyes, Darylle Joshua| - |
-|Sampao, Sebastian James| - |
-|Untalan, Chaurell Eichen| - |
+|:----|:----|
+|Bercasio, Vincent Jon| Project Manager, Analytics Engineer |
+|Lampa, Kenzo Nicolo| Analytics Engineer, ETL Engineer|
+|Reyes, Darylle Joshua| Workflow Orchestration Engineer, BI Developer |
+|Sampao, Sebastian James| ETL Engineer, Database Architect |
+|Untalan, Chaurell Eichen| Database Architect, BI Developer |
 
 ## Sources and Credits
 

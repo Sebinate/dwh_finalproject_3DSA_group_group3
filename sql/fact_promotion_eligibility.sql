@@ -5,7 +5,7 @@
     SELECT
         dim_campaign.CampaignKey,
         dim_order.OrderKey
-        FROM staging.promotion_eligibility
+    FROM staging.promotion_eligibility
     LEFT JOIN warehouse.dim_campaign
         ON staging.promotion_eligibility.campaign_id = dim_campaign.campaign_id
     LEFT JOIN warehouse.dim_order

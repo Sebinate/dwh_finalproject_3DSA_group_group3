@@ -3,9 +3,9 @@ services:
     image: postgres:13
     container_name: postgres_db
     environment:
-      POSTGRES_USER: myuser
+      POSTGRES_USER: admin
       POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: shopzada
     ports:
       - "5432:5432"
     volumes:
@@ -17,6 +17,58 @@ services:
       timeout: 5s
       retries: 5
 
+  airflow-init:
+    build:
+      context: .
+    depends_on:
+      - postgres
+    entrypoint: 
+      - bash
+      - -c
+      - |
+        airflow db init &&
+        airflow users create \
+          --username admin \
+          --firstname Air \
+          --lastname Flow \
+          --role Admin \
+          --email admin@example.com \
+          --password admin
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./dags:/opt/airflow/data
+
+  airflow-webserver:
+    build:
+      context: .
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow 
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+    ports:
+      - "8070:8080"
+    command: webserver
+  airflow-scheduler:
+    build:
+      context: .
+    depends_on:
+      - airflow-webserver
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+    command: scheduler
+
   ingestor-service:
     image: ShopZada/ingestor-service:latest
     build:
@@ -24,9 +76,9 @@ services:
       dockerfile: ./infra/ingestion/Dockerfile
     environment:
       DB_HOST: warehouse_db
-      DB_USER: myuser
+      DB_USER: admin
       DB_PASSWORD: mypassword
-      DB_NAME: mydatabase
+      DB_NAME: shopzada
       DB_PORT: 5432
     volumes:
       - ./data:/app/data
@@ -40,9 +92,9 @@ services:
       dockerfile: ./infra/transform_to_dw/Dockerfile
     environment:
       DB_HOST: warehouse_db
-      DB_USER: myuser
+      DB_USER: admin
       DB_PASSWORD: mypassword
-      DB_NAME: mydatabase
+      DB_NAME: shopzada
       DB_PORT: 5432
     volumes:
       - ./data:/app/data

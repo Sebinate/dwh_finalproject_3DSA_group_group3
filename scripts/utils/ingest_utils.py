@@ -98,7 +98,7 @@ class Ingest:
                             batch = cleaner[0](batch, *cleaner[1:])
                         else:
                             batch = cleaner[0](batch)
-                    batch.to_sql(name = staging_table_name, con = self.engine, if_exists = "append")
+                    batch.to_sql(name = staging_table_name, con = self.engine, if_exists = "append", schema = "staging")
 
             else:
                 data = reader(file_path)
@@ -107,7 +107,7 @@ class Ingest:
                         data = cleaner[0](data, *cleaner[1:])
                     else:
                         data = cleaner[0](data)
-                data.to_sql(name = staging_table_name, con = self.engine, if_exists = "append")
+                data.to_sql(name = staging_table_name, con = self.engine, if_exists = "append", schema = "staging")
 
 if __name__ == "__main__":
-    print(html_reader(r"C:\Users\User\dwh_finalproject_3DSA_group_group3\data\Project Dataset-20241024T131910Z-001\Operations Department\order_delays.html"))
+    print(pkl_reader(r"C:\Users\User\dwh_finalproject_3DSA_group_group3\data\Project Dataset-20241024T131910Z-001\Customer Management Department\user_credit_card.pickle"))

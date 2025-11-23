@@ -9,12 +9,14 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ./init:/docker-entrypoint-initdb.d
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U myuser -d mydatabase"]
       interval: 10s
       timeout: 5s
       retries: 5
+
   ingestor-service:
     image: ShopZada/ingestor-service:latest
     build:

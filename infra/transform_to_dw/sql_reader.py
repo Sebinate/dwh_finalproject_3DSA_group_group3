@@ -4,7 +4,7 @@ import sys
 from sqlalchemy import text
 from scripts.utils import utils
 
-sql_file = os.environ["SQL_FILE"]
+sql_file = os.environ.get("SQL_FILE")
 
 def main():
     try:
@@ -12,7 +12,7 @@ def main():
 
         path = os.path.join("sql/", sql_file)
 
-        with open(path, "rb") as file:
+        with open(path, "r") as file:
             sql_commands = file.read()
 
         with engine.connect() as conn:

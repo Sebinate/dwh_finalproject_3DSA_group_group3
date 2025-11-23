@@ -18,7 +18,7 @@ file_paths = glob.glob(file_match_path, recursive = True)
 cleaners = [(transform_utils.columndropinator,),
             (transform_utils.column_renaminator,
             {"product id": "product_id",
-            "price_per_unit": "product_price",
+            "price": "product_price",
             "Name": "product_name"}),
             (transform_utils.nullinator, {
             "product_type": "Unknown"

@@ -94,9 +94,9 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_staff (
     staff_name            VARCHAR(255),
     staff_job_level       VARCHAR(50),
     staff_street          VARCHAR(255),
-    staff_state           VARCHAR(50),
-    staff_city            VARCHAR(50),
-    staff_country         VARCHAR(50),
+    staff_state           VARCHAR(100),
+    staff_city            VARCHAR(100),
+    staff_country         VARCHAR(100),
     staff_contact_number  VARCHAR(20),
     staff_creation_date_key INT REFERENCES warehouse.dim_staff_date(date_key)
 );
@@ -109,8 +109,8 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_user (
     user_ccn              VARCHAR(50),           
     user_bank             VARCHAR(100),
     user_street           VARCHAR(255),
-    user_city             VARCHAR(50),
-    user_country          VARCHAR(50),
+    user_city             VARCHAR(100),
+    user_country          VARCHAR(100),
     user_gender           VARCHAR(10),
     user_device_type      VARCHAR(50),
     user_type             VARCHAR(50),
@@ -125,9 +125,9 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_merchant (
     merchant_id           VARCHAR(16) NOT NULL,
     merchant_name         VARCHAR(255),
     merchant_street       VARCHAR(255),
-    merchant_state        VARCHAR(50),
-    merchant_city         VARCHAR(50),
-    merchant_country      VARCHAR(50),
+    merchant_state        VARCHAR(100),
+    merchant_city         VARCHAR(100),
+    merchant_country      VARCHAR(100),
     merchant_contact      VARCHAR(20),
     merchant_creation_date_key INT REFERENCES warehouse.dim_merchant_date(date_key)
 );
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_merchant (
 CREATE TABLE IF NOT EXISTS warehouse.dim_order (
     order_key                 SERIAL PRIMARY KEY,    
     order_id                  VARCHAR(100) NOT NULL,       
-    order_estimated_arrival   DATE,
+    order_estimated_arrival   INT,
     order_transac_date_key INT REFERENCES warehouse.dim_order_date(date_key)
 );
 

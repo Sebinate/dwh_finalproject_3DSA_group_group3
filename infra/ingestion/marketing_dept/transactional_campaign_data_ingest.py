@@ -20,7 +20,7 @@ file_paths = glob.glob(file_match_path, recursive = True)
 cleaners = [(transform_utils.columndropinator,),
             (transform_utils.column_renaminator,
             {'transaction_date': 'transact_date',
-            'estimated arrival': 'transact_estimated_arrival',
+            'estimated arrival': 'transact_estimated_arrival_days',
             'availed': 'transact_availed',}),
             (transform_utils.unduplicateinator, "campaign_id"),
             (transform_utils.datetimeinator, "transact_date"),

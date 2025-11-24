@@ -1,12 +1,14 @@
-    INSERT INTO warehouse.Fact_Promotion_Eligibility (
-        CampaignKey,
-        OrderKey
-    )
-    SELECT
-        dim_campaign.CampaignKey,
-        dim_order.OrderKey
-    FROM staging.promotion_eligibility
-    LEFT JOIN warehouse.dim_campaign
-        ON staging.promotion_eligibility.campaign_id = dim_campaign.campaign_id
-    LEFT JOIN warehouse.dim_order
-        ON staging.promotion_eligibility.order_id = dim_order.order_id;
+INSERT INTO warehouse.fact_promotion_eligibility (
+    campaign_key,
+    order_key
+)
+SELECT
+    dim_campaign.campaign_key,                         
+    dim_order.order_key
+FROM (SELECT * 
+        FROM staging.transactional_campaign_data AS tcd 
+        WHERE tcd.transact_availed = true) AS fpe
+JOIN warehouse.dim_campaign
+    ON fpe.campaign_id = warehouse.dim_campaign.campaign_id
+JOIN warehouse.dim_order
+    ON fpe.order_id = warehouse.dim_order.order_id;

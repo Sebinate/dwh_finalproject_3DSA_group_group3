@@ -12,16 +12,26 @@ services:
       - ./init:/docker-entrypoint-initdb.d
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U myuser -d mydatabase"]
+      test: ["CMD-SHELL", "pg_isready -U admin -d shopzada"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  airflow_metatada-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
   airflow-init:
-    build:
-      context: .
+    image: apache/airflow:2.9.1
     depends_on:
-      - postgres
+      - airflow_metatada-db
     entrypoint: 
       - bash
       - -c
@@ -36,19 +46,18 @@ services:
           --password admin
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_metatada-db:5432/airflow
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags:/opt/airflow/data
 
   airflow-webserver:
-    build:
-      context: .
+    image: apache/airflow:2.9.1
     depends_on:
-      - postgres
+      - airflow_metatada-db
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow 
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_metatada-db:5432/airflow 
       AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
     volumes:
       - ./dags:/opt/airflow/dags
@@ -57,13 +66,12 @@ services:
       - "8070:8080"
     command: webserver
   airflow-scheduler:
-    build:
-      context: .
+    image: apache/airflow:2.9.1
     depends_on:
       - airflow-webserver
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_metatada-db:5432/airflow
     volumes:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
@@ -100,5 +108,7 @@ services:
       - ./data:/app/data
     depends_on:
       - warehouse_db
+
 volumes:
   pgdata:
+  postgres-db-volume:

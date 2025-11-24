@@ -52,7 +52,7 @@ def stringinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
 def datetimeinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
     if column in df.columns:
         try:
-            df[column] = pd.to_datetime(df[column], errors='coerce')
+            df[column] = pd.to_datetime(df[column], errors='coerce').dt.date
         except Exception as e:
             print(f"Error converting column '{column}' to datetime: {e}")
             return

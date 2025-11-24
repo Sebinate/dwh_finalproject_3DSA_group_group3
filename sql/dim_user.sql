@@ -1,13 +1,13 @@
 INSERT INTO warehouse.dim_user (user_id, user_name, user_ccn, user_bank, 
-                                user_street, user_city, user_country, user_birthdate, 
-                                user_gender, user_type, user_job_title, user_job_level user_creation_date)
+                                user_street, user_city, user_country, user_birthdate_key, 
+                                user_gender, user_type, user_job_title, user_job_level, user_creation_date_key)
 
 SELECT DISTINCT ud.user_id, ud.user_name, 
-                COALESCE(ucc.user_ccn, -1), COALESCE(ucc.user_bank, -1), 
+                COALESCE(ucc.user_ccn, 'None'), COALESCE(ucc.user_issuing_bank, 'None'), 
                 ud.user_street, ud.user_city, ud.user_country, 
-                ud.user_gender, ud.user_type, 
-                COALESCE(uj.user_job_title, "None"), COALESCE(uj.user_job_level, "None"),
-                COALESCE(birthdate.date_key, -1), COALESCE(creation.date_key, -1)
+                COALESCE(creation.date_key, -1), ud.user_gender, ud.user_type, 
+                COALESCE(uj.user_job_title, 'None'), COALESCE(uj.user_job_level, 'None'),
+                COALESCE(birthdate.date_key, -1)
 
 FROM staging.user_data AS ud
 LEFT JOIN staging.user_credit_card AS ucc

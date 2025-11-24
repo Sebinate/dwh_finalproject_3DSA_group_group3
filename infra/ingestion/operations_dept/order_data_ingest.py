@@ -25,7 +25,7 @@ cleaners = [(transform_utils.columndropinator,),
             (transform_utils.stringinator, "order_id"),
             (transform_utils.stringinator, "user_id"),
             (transform_utils.numberextractinator, "transact_estimated_arrival_days"),
-            (transform_utils.intinator, "transact_estimated_arrival_days")
+            (transform_utils.intinator, "transact_estimated_arrival_days"),
             (transform_utils.datetimeinator, "transact_date")
             ]
 

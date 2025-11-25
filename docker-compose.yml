@@ -57,14 +57,17 @@ services:
       - airflow_metatada-db
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      _PIP_ADDITIONAL_REQUIREMENTS: "apache-airflow-providers-docker"
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_metatada-db:5432/airflow 
       AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
+      PROJECT_HOME: ${PROJECT_HOME}
     volumes:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
     ports:
       - "8070:8080"
     command: webserver
+
   airflow-scheduler:
     image: apache/airflow:2.9.1
     depends_on:
@@ -72,9 +75,12 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_metatada-db:5432/airflow
+      _PIP_ADDITIONAL_REQUIREMENTS: "apache-airflow-providers-docker"
+      PROJECT_HOME: ${PROJECT_HOME}
     volumes:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
+      - /var/run/docker.sock:/var/run/docker.sock
     command: scheduler
 
   ingestor-service:

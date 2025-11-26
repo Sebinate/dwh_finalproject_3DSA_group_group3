@@ -5,6 +5,12 @@ from scripts.utils import ingest_utils
 from scripts.utils import utils
 from scripts.utils import transform_utils
 
+EXPECTED_PRODUCT_SCHEMA = {
+    'order_id':'object',
+    'merchant_id':'object',
+    'staff_id':'object',
+}
+
 # Make this dynamic in the future
 PATH = r"data/Project Dataset-20241024T131910Z-001/Enterprise Department"
 pattern = r"order_with_merchant*"
@@ -26,6 +32,7 @@ cleaners = [(transform_utils.columndropinator,),
 product_ingester = ingest_utils.Ingest(engine = engine, 
                                cleaners = cleaners, 
                                file_paths = file_paths, 
-                               pattern = pattern)
+                               pattern = pattern,
+                               expected_schema = EXPECTED_PRODUCT_SCHEMA)
 
 product_ingester.ingest()

@@ -6,6 +6,14 @@ from scripts.utils import ingest_utils
 from scripts.utils import utils
 from sqlalchemy import inspect
 
+EXPECTED_PRODUCT_SCHEMA = {
+    'Unnamed: 0':'int64',
+    'user_id':'object',
+    'name':'object',
+    'job_title':'object',
+    'job_level':'object',
+}
+
 # Make this dynamic in the future
 PATH = r"data/Project Dataset-20241024T131910Z-001/Customer Management Department"
 pattern = r"user_job*"
@@ -35,6 +43,7 @@ cleaners = [(transform_utils.columndropinator,),
 product_ingester = ingest_utils.Ingest(engine = engine, 
                                cleaners = cleaners, 
                                file_paths = file_paths, 
-                               pattern = pattern)
+                               pattern = pattern,
+                               expected_schema = EXPECTED_PRODUCT_SCHEMA)
 
 product_ingester.ingest()

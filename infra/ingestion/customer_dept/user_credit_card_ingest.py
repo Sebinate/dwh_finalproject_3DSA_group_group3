@@ -6,6 +6,13 @@ from scripts.utils import ingest_utils
 from scripts.utils import utils
 from sqlalchemy import inspect
 
+EXPECTED_PRODUCT_SCHEMA = {
+    'user_id':'object',
+    'name':'object',
+    'credit_card_number':'int64',
+    'issuing_bank':'object',
+}
+
 # Make this dynamic in the future
 PATH = r"data/Project Dataset-20241024T131910Z-001/Customer Management Department"
 pattern = r"user_credit_card*"
@@ -32,6 +39,7 @@ cleaners = [(transform_utils.columndropinator,),
 product_ingester = ingest_utils.Ingest(engine = engine, 
                                cleaners = cleaners, 
                                file_paths = file_paths, 
-                               pattern = pattern)
+                               pattern = pattern,
+                               expected_schema = EXPECTED_PRODUCT_SCHEMA)
 
 product_ingester.ingest()

@@ -1,4 +1,5 @@
 import pandas as pd
+import hashlib
 import re
 
 def whitespacedestroyer(text:str) -> str:
@@ -91,4 +92,17 @@ def column_renaminator(df: pd.DataFrame, renames: dict) -> pd.DataFrame:
 def nullinator(df: pd.DataFrame, fill_rules: dict) -> pd.DataFrame:
     df = df.fillna(value=fill_rules)
 
+    return df
+
+def hashinator(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
+    def _hash_value(value: str) -> str:
+        try:
+            sha256 = hashlib.sha256() 
+            encoded_value = str(value).encode('utf-8')
+            sha256.update(encoded_value) 
+            return sha256.hexdigest() 
+        except Exception:
+            return "SOMETHING WRONG!"
+    df[column_name] = df[column_name].apply(_hash_value)
+    print (f"Hashed {column_name}")
     return df

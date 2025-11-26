@@ -5,7 +5,7 @@ import pyarrow.parquet as pq
 from typing import Iterator
 from bs4 import BeautifulSoup
 from sqlalchemy import create_engine, Engine, inspect
-from scripts.utils import transform_utils
+from scripts.utils import transform_utils, schema_utils
 
 def csv_reader(path: str, chunksize: int = 10_000) -> Iterator[pd.DataFrame]:
     data = pd.read_csv(path, chunksize = chunksize, sep = None, index_col = False)
@@ -68,31 +68,41 @@ def file_type_reader(file_type: str):
     elif file_type == "json":
         return json_reader
 
+# ingest_utils.py
 class Ingest:
     def __init__(self, 
                  engine: Engine,
                  cleaners: list[tuple],
                  file_paths: list,
-                 pattern: str):
+                 pattern: str,
+                 expected_schema: list[str], 
+                 mismatch_folder: str = "/app/data/schema_mismatches"):
         self.engine = engine
         self.cleaners = cleaners
         self.file_paths = file_paths
         self.pattern = pattern
+        self.expected_schema = expected_schema 
+        self.mismatch_folder = mismatch_folder 
     
-    def ingest(self):
+def ingest(self):
         if not self.file_paths:
             print("No new files found")
             return
-
         staging_table_name = self.pattern.split("*")[0]
-
+        
         for file_path in self.file_paths:
             file_type = file_path.split(r"\\")[-1].split(".")[-1]
-
             reader = file_type_reader(file_type)
-
             if file_type == "csv" or file_type == "parquet":
                 for batch in reader(file_path):
+                    is_valid, batch = schema_utils.validate_schema(
+                        df=batch, 
+                        expected_columns=self.expected_schema, 
+                        mismatch_folder=self.mismatch_folder,
+                        file_path=file_path
+                    )          
+                    if not is_valid:
+                        continue
                     for cleaner in self.cleaners:
                         if len(cleaner) > 1:
                             batch = cleaner[0](batch, *cleaner[1:])
@@ -102,6 +112,14 @@ class Ingest:
 
             else:
                 data = reader(file_path)
+                is_valid, data = schema_utils.validate_schema(
+                    df=data, 
+                    expected_columns=self.expected_schema, 
+                    mismatch_folder=self.mismatch_folder,
+                    file_path=file_path
+                )
+                if not is_valid:
+                    continue 
                 for cleaner in self.cleaners:
                     if len(cleaner) > 1:
                         data = cleaner[0](data, *cleaner[1:])

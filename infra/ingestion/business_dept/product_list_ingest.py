@@ -2,7 +2,16 @@ import os
 import glob
 from scripts.utils import transform_utils
 from scripts.utils import ingest_utils
+from scripts.utils import schema_utils
 from scripts.utils import utils
+
+EXPECTED_PRODUCT_SCHEMA = {
+    "Unnamed: 0":'int64',
+    "product id":'object',
+    "product_name":'object',
+    "product_type":'object',
+    "price":'float64',
+}
 
 # Make this dynamic in the future
 PATH = r"data/Project Dataset-20241024T131910Z-001/Business Department"
@@ -33,6 +42,6 @@ cleaners = [(transform_utils.columndropinator,),
 product_ingester = ingest_utils.Ingest(engine = engine, 
                                cleaners = cleaners, 
                                file_paths = file_paths, 
-                               pattern = pattern)
-
+                               pattern = pattern,
+                               expected_schema = EXPECTED_PRODUCT_SCHEMA)
 product_ingester.ingest()

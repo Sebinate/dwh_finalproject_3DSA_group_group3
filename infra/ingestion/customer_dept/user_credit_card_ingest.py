@@ -33,6 +33,7 @@ cleaners = [(transform_utils.columndropinator,),
             (transform_utils.stringinator, "user_id"),
             (transform_utils.stringinator, "user_name"),
             (transform_utils.stringinator, "user_ccn"),
+            (transform_utils.hashinator, "user_ccn"),
             (transform_utils.stringinator, "user_issuing_bank"),
             ]
 

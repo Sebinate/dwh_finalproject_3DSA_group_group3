@@ -7,7 +7,7 @@ from scripts.utils import utils
 
 EXPECTED_PRODUCT_SCHEMA = {
     "Unnamed: 0":'int64',
-    "product id":'object',
+    "product_id":'object',
     "product_name":'object',
     "product_type":'object',
     "price":'float64',

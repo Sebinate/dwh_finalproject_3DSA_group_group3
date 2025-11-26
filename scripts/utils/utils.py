@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, Engine
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def connect() -> Engine:
     user = os.environ.get("DB_USER")

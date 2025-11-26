@@ -16,6 +16,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - dwh_finalproject_3dsa_group_group3_default
 
   airflow_metatada-db:
     image: postgres:13
@@ -27,9 +29,13 @@ services:
       - postgres-db-volume:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    networks:
+      - dwh_finalproject_3dsa_group_group3_default
 
   airflow-init:
-    image: apache/airflow:2.9.1
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - airflow_metatada-db
     entrypoint: 
@@ -50,9 +56,13 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags:/opt/airflow/data
+    networks:
+      - dwh_finalproject_3dsa_group_group3_default
 
   airflow-webserver:
-    image: apache/airflow:2.9.1
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - airflow_metatada-db
     environment:
@@ -60,28 +70,40 @@ services:
       _PIP_ADDITIONAL_REQUIREMENTS: "apache-airflow-providers-docker"
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_metatada-db:5432/airflow 
       AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "fix_my_logs_please"
       PROJECT_HOME: ${PROJECT_HOME}
     volumes:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./.env:/opt/airflow/.env
     ports:
       - "8070:8080"
     command: webserver
+    networks:
+      - dwh_finalproject_3dsa_group_group3_default
 
   airflow-scheduler:
-    image: apache/airflow:2.9.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+
     depends_on:
       - airflow-webserver
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_metatada-db:5432/airflow
       _PIP_ADDITIONAL_REQUIREMENTS: "apache-airflow-providers-docker"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "fix_my_logs_please"
       PROJECT_HOME: ${PROJECT_HOME}
     volumes:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./.env:/opt/airflow/.env 
     command: scheduler
+    networks:
+      - dwh_finalproject_3dsa_group_group3_default
 
   ingestor-service:
     image: ShopZada/ingestor-service:latest
@@ -98,6 +120,8 @@ services:
       - ./data:/app/data
     depends_on:
       - warehouse_db
+    networks:
+      - dwh_finalproject_3dsa_group_group3_default
 
   to_dw-service:
     image: ShopZada/to_dw-service:latest
@@ -114,7 +138,13 @@ services:
       - ./data:/app/data
     depends_on:
       - warehouse_db
+    networks:
+      - dwh_finalproject_3dsa_group_group3_default      
 
 volumes:
   pgdata:
   postgres-db-volume:
+
+networks:
+  dwh_finalproject_3dsa_group_group3_default:
+    name: dwh_finalproject_3dsa_group_group3_default

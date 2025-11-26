@@ -6,3 +6,4 @@ sqlalchemy
 openpyxl
 lxml
 bs4
+python-dotenv

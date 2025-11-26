@@ -4,8 +4,13 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.docker.operators.docker import DockerOperator, Mount
 from datetime import datetime
 import os
+from dotenv import load_dotenv
 
-project_path = os.getenv("PROJECT_HOME", "/tmp")
+load_dotenv("/opt/airflow/.env")
+
+project_path = os.getenv("PROJECT_HOME")
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 def create_ingest_dag(source_name: str, schedule: str, department: str):
     default_args = {
@@ -28,22 +33,22 @@ def create_ingest_dag(source_name: str, schedule: str, department: str):
     with dag:
         op = DockerOperator(
             task_id = f"{dag_id}",
-            image = "ShopZada/to_dw-service:latest",
+            image = "ShopZada/ingestor-service:latest",
             command = ['python', f'infra/ingestion/{department}/{source_name}_ingest.py'],
             network_mode = "dwh_finalproject_3dsa_group_group3_default",
             docker_url = 'unix://var/run/docker.sock',
-            auto_remove = True,
+            auto_remove = False,
             outlets = [ds],
             force_pull=False,
             environment = {
                 "DB_HOST": "warehouse_db",
-                "DB_USER": "admin",
-                "DB_PASSWORD": "mypassword",
+                "DB_USER": DB_USER,
+                "DB_PASSWORD": DB_PASSWORD,
                 "DB_NAME": "shopzada",
                 "DB_PORT": "5432"
             },
             mounts=[
-                Mount(source=f"{project_path}/data", target="/app/data", type="bind"),
+                Mount(source=fr"{project_path}/data", target="/app/data", type="bind"),
             ],
             working_dir="/app"
         )

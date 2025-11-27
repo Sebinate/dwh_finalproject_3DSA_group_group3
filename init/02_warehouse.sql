@@ -106,16 +106,16 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_user (
     user_key              SERIAL PRIMARY KEY,        
     user_id               VARCHAR(16) NOT NULL,
     user_name             VARCHAR(255),
-    user_ccn              VARCHAR(50),           
+    user_ccn              VARCHAR(100),           
     user_bank             VARCHAR(100),
     user_street           VARCHAR(255),
     user_city             VARCHAR(100),
     user_country          VARCHAR(100),
     user_gender           VARCHAR(10),
-    user_device_type      VARCHAR(50),
-    user_type             VARCHAR(50),
+    user_device_type      VARCHAR(100),
+    user_type             VARCHAR(100),
     user_job_title        VARCHAR(100),
-    user_job_level        VARCHAR(50),
+    user_job_level        VARCHAR(100),
     user_creation_date_key INT REFERENCES warehouse.dim_user_date(date_key),
     user_birthdate_key     INT REFERENCES warehouse.dim_user_date(date_key) 
 );
@@ -156,7 +156,5 @@ CREATE TABLE IF NOT EXISTS warehouse.fact_transaction (
     -- Measures
     delay                 INT,                    
     price                 NUMERIC(10, 2),
-    quantity              INT,
-
-    PRIMARY KEY (date_key, staff_key, merchant_key, user_key, product_key, order_key)
+    quantity              INT
 );

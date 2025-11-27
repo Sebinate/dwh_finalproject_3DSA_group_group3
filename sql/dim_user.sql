@@ -7,7 +7,7 @@ SELECT DISTINCT ud.user_id, ud.user_name,
                 ud.user_street, ud.user_city, ud.user_country, 
                 COALESCE(creation.date_key, -1), ud.user_gender, ud.user_type, 
                 COALESCE(uj.user_job_title, 'None'), COALESCE(uj.user_job_level, 'None'),
-                COALESCE(birthdate.date_key, -1)
+                COALESCE(birthdate.date_key, 19000101)
 
 FROM staging.user_data AS ud
 LEFT JOIN staging.user_credit_card AS ucc
@@ -18,3 +18,9 @@ LEFT JOIN warehouse.dim_user_date AS birthdate
     ON birthdate.date_full = ud.user_birthdate
 LEFT JOIN warehouse.dim_user_date AS creation
     ON creation.date_full = ud.user_creation_date;
+
+TRUNCATE TABLE staging.user_credit_card;
+
+TRUNCATE TABLE staging.user_data;
+
+TRUNCATE TABLE staging.user_job;

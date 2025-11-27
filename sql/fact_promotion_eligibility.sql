@@ -12,3 +12,5 @@ JOIN warehouse.dim_campaign
     ON fpe.campaign_id = warehouse.dim_campaign.campaign_id
 JOIN warehouse.dim_order
     ON fpe.order_id = warehouse.dim_order.order_id;
+
+TRUNCATE TABLE staging.transactional_campaign_data;

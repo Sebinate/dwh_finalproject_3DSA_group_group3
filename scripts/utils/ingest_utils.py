@@ -97,7 +97,7 @@ class Ingest:
                     for batch in reader(file_path):
                         is_valid, batch = schema_utils.validate_schema(
                             df=batch, 
-                            expected_columns=self.expected_schema, 
+                            expected_schema_map=self.expected_schema, 
                             mismatch_folder=self.mismatch_folder,
                             file_path=file_path
                         )          

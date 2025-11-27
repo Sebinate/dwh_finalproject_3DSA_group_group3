@@ -14,7 +14,7 @@ SELECT
 
 FROM (
     SELECT generate_series(
-        '2020-01-01'::DATE, 
+        '2015-01-01'::DATE, 
         '2030-12-31'::DATE, 
         '1 day'::INTERVAL
     ) AS datum

@@ -1,3 +1,20 @@
+-- 1. Index the Staging Tables (This makes joins instant)
+CREATE INDEX IF NOT EXISTS idx_stg_prices_order ON staging.line_item_data_prices(order_id);
+CREATE INDEX IF NOT EXISTS idx_stg_delays_order ON staging.order_delays(order_id);
+CREATE INDEX IF NOT EXISTS idx_stg_products_order ON staging.line_item_data_products(order_id); -- WARNING: See note below
+CREATE INDEX IF NOT EXISTS idx_stg_products_prod ON staging.line_item_data_products(product_id);
+CREATE INDEX IF NOT EXISTS idx_stg_data_order ON staging.order_data(order_id);
+CREATE INDEX IF NOT EXISTS idx_stg_data_user ON staging.order_data(user_id);
+CREATE INDEX IF NOT EXISTS idx_stg_merch_order ON staging.order_with_merchant(order_id);
+
+-- 2. Update Statistics
+-- This tells Postgres "Hey, this table has 2 million rows, don't use a Nested Loop join!"
+ANALYZE staging.line_item_data_prices;
+ANALYZE staging.order_delays;
+ANALYZE staging.line_item_data_products;
+ANALYZE staging.order_data;
+ANALYZE staging.order_with_merchant;
+
 INSERT INTO warehouse.fact_transaction (
     date_key,
     staff_key,
@@ -10,50 +27,68 @@ INSERT INTO warehouse.fact_transaction (
     quantity
 )
 SELECT 
-    COALESCE(warehouse.dim_date.date_key, -1) AS date_key, --
+    COALESCE(warehouse.dim_date.date_key, 19000101) AS date_key, --
     COALESCE(staff.staff_key, -1) AS staff_key,
     COALESCE(merchant.merchant_key, -1) AS merchant_key,
     COALESCE(warehouse.dim_user.user_key, -1) AS user_key, --
     COALESCE(warehouse.dim_product.product_key, -1) AS product_key, --
     COALESCE(warehouse.dim_order.order_key, -1) AS order_key, --
     COALESCE(order_delay.order_delay_days, 0), --
-    line_prices.product_price, --
-    line_prices.order_quantity --
+    prices.product_price, --
+    prices.order_quantity --
     
 FROM 
-    staging.line_item_data_prices AS line_prices
+    (
+        SELECT 
+            order_id, 
+            product_price, 
+            order_quantity,
+            ROW_NUMBER() OVER(PARTITION BY order_id ORDER BY ctid) as rn
+        FROM staging.line_item_data_prices
+    ) AS prices
 
-LEFT JOIN staging.order_delays AS order_delay
-    ON line_prices.order_id = order_delay.order_id
+INNER JOIN 
+    (
+        SELECT 
+            order_id, 
+            product_id,
+            ROW_NUMBER() OVER(PARTITION BY order_id ORDER BY ctid) as rn
+        FROM staging.line_item_data_products
+    ) AS products
+    ON prices.order_id = products.order_id 
+    AND prices.rn = products.rn
 
--- Joining on products
-LEFT JOIN staging.line_item_data_products AS line_products
-    ON line_prices.order_id = line_products.order_id
-LEFT JOIN warehouse.dim_product
-    ON warehouse.dim_product.product_id = line_products.product_id
+LEFT JOIN staging.order_delays AS order_delay --
+    ON prices.order_id = order_delay.order_id
 
--- Joining on users
 LEFT JOIN staging.order_data AS order_data 
-    ON line_prices.order_id = order_data.order_id
+    ON prices.order_id = order_data.order_id
+
+LEFT JOIN staging.order_with_merchant AS owm
+    ON owm.order_id = prices.order_id
+--
+LEFT JOIN warehouse.dim_date
+    ON warehouse.dim_date.date_full = order_data.transact_date::DATE
+
 LEFT JOIN warehouse.dim_user
     ON warehouse.dim_user.user_id = order_data.user_id
 
--- Joining on Orders
 LEFT JOIN warehouse.dim_order
-    ON warehouse.dim_order.order_id = line_prices.order_id
-    LEFT JOIN warehouse.dim_order_date
-        ON warehouse.dim_order.order_transac_date_key = warehouse.dim_order_date.date_key
+    ON warehouse.dim_order.order_id = prices.order_id
 
--- Joining on Date
-LEFT JOIN warehouse.dim_date
-    ON warehouse.dim_order_date.date_full = order_data.transact_date
-
--- Joining on Merchant
-LEFT JOIN staging.order_with_merchant AS owm
-    ON owm.order_id = line_prices.order_id
 LEFT JOIN warehouse.dim_merchant AS merchant
     ON merchant.merchant_id = owm.merchant_id
 
--- Joining on Staff
 LEFT JOIN warehouse.dim_staff AS staff
     ON staff.staff_id = owm.staff_id
+    
+LEFT JOIN warehouse.dim_product
+    ON warehouse.dim_product.product_id = products.product_id;
+
+
+
+TRUNCATE TABLE staging.order_with_merchant;
+TRUNCATE TABLE staging.line_item_data_prices;
+TRUNCATE TABLE staging.line_item_data_products;
+TRUNCATE TABLE staging.order_delays;
+TRUNCATE TABLE staging.order_data;

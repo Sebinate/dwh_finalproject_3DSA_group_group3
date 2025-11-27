@@ -9,3 +9,5 @@ SELECT DISTINCT s.staff_id, s.staff_name, s.staff_job_level,
 FROM staging.staff_data AS s
 LEFT JOIN warehouse.dim_staff_date AS w
     ON s.staff_creation_date = w.date_full;
+
+TRUNCATE TABLE staging.staff_data;

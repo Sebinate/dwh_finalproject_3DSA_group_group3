@@ -7,7 +7,6 @@ from scripts.utils import utils
 from sqlalchemy import inspect
 
 EXPECTED_SCHEMA = {
-    'Unnamed: 0':'int64',
     'order_id':'object',
     'price':'float64',
     'quantity':'object',

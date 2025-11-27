@@ -7,7 +7,6 @@ from scripts.utils import utils
 from sqlalchemy import inspect
 
 EXPECTED_SCHEMA = {
-    'Unnamed: 0':'int64',
     'user_id':'object',
     'name':'object',
     'job_title':'object',

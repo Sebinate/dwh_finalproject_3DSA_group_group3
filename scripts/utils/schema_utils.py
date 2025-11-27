@@ -14,13 +14,9 @@ def validate_schema(
     expected_columns = list(expected_schema_map.keys())
     df_columns = df.columns.tolist()
     
-    # 1. COLUMN NAME CHECK LOGIC
     if strict_column_name_check:
-        # Strict: Checks for exact match (used for POST-TRANSFORMATION)
         is_valid_name = set(df_columns) == set(expected_columns)
     else:
-        # Non-Strict: Checks that all expected columns are present (used for PRE-TRANSFORMATION)
-        # Allows extra columns like 'Unnamed: 0' to exist in the raw data
         is_valid_name = set(expected_columns).issubset(set(df_columns)) 
         
     if not is_valid_name: 

@@ -68,8 +68,8 @@ def file_type_reader(file_type: str):
 class Ingest:
     def __init__(self, 
                  engine: Engine,
-                 cleaners: List[Tuple],
-                 file_paths: List[str],
+                 cleaners: list[tuple],
+                 file_paths: list[str],
                  pattern: str,
                  expected_schema: dict[str, type], # pre transformm
                  final_schema: dict[str, type],     # post transform

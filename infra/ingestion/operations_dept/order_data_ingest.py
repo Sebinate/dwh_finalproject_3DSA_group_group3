@@ -6,12 +6,19 @@ from scripts.utils import ingest_utils
 from scripts.utils import utils
 from sqlalchemy import inspect
 
-EXPECTED_PRODUCT_SCHEMA = {
+EXPECTED_SCHEMA = {
     'Unnamed: 0':'int64',
     'order_id':'object',
     'user_id':'object',
     'estimated arrival':'object',
     'transaction_date':'object',
+}
+
+FINAL_SCHEMA = {
+    'order_id': 'string',
+    'user_id': 'string',
+    'transact_estimated_arrival_days': 'Int64',
+    'transact_date': 'datetime64[ns]',
 }
 
 # Make this dynamic in the future
@@ -41,6 +48,7 @@ product_ingester = ingest_utils.Ingest(engine = engine,
                                cleaners = cleaners, 
                                file_paths = file_paths, 
                                pattern = pattern,
-                               expected_schema = EXPECTED_PRODUCT_SCHEMA)
+                               expected_schema = EXPECTED_SCHEMA,
+                               final_schema = FINAL_SCHEMA)
 
 product_ingester.ingest()

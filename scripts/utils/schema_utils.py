@@ -7,19 +7,29 @@ def validate_schema(
     df: pd.DataFrame, 
     expected_schema_map: dict[str, type],
     mismatch_folder: str,
-    file_path: str = None
+    file_path: str = None,
+    strict_column_name_check: bool = True # NEW PARAMETER
 ) -> Tuple[bool, pd.DataFrame]:
+    
     expected_columns = list(expected_schema_map.keys())
     df_columns = df.columns.tolist()
-    is_valid = set(df_columns) == set(expected_columns)
     
-    if not is_valid:
-        print(f"Expected {expected_columns} found {df_columns})")
+    # 1. COLUMN NAME CHECK LOGIC
+    if strict_column_name_check:
+        # Strict: Checks for exact match (used for POST-TRANSFORMATION)
+        is_valid_name = set(df_columns) == set(expected_columns)
+    else:
+        # Non-Strict: Checks that all expected columns are present (used for PRE-TRANSFORMATION)
+        # Allows extra columns like 'Unnamed: 0' to exist in the raw data
+        is_valid_name = set(expected_columns).issubset(set(df_columns)) 
+        
+    if not is_valid_name: 
+        print(f"Schema name mismatch. strict name check is {strict_column_name_check}. Expected {expected_columns} found {df_columns})")
         
         os.makedirs(mismatch_folder, exist_ok=True)
         filename = os.path.basename(file_path) if file_path else "mismatch_data"
         clean_filename = os.path.splitext(filename)[0].replace(".", "_")
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S") #para pag may multiple similar named files di mag overwrite
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         mismatch_file_name = f"{clean_filename}_{timestamp}_schema_mismatch_name.parquet"    
         mismatch_output_path = os.path.join(mismatch_folder, mismatch_file_name)
         try:
@@ -30,17 +40,25 @@ def validate_schema(
         return False, df
     
     print("Schema name OK, checking col types")
+    
+    df_for_astype = df[expected_columns].copy()
+    
     try:
-        df = df.astype(expected_schema_map, errors='raise') 
-        is_valid = True
+        df_for_astype = df_for_astype.astype(expected_schema_map, errors='raise') 
+        
+        if not strict_column_name_check:
+            df = df.drop(columns=expected_columns, errors='ignore') 
+            df = pd.concat([df, df_for_astype], axis=1)
+        else:
+             df = df_for_astype
+             
 
     except Exception as e:
-        is_valid = False
         print(e)
         os.makedirs(mismatch_folder, exist_ok=True)
         filename = os.path.basename(file_path) if file_path else "mismatch_data"
         clean_filename = os.path.splitext(filename)[0].replace(".", "_")
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S") #para pag may multiple similar named files di mag overwrite
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S") 
         mismatch_file_name = f"{clean_filename}_{timestamp}_schema_mismatch_type.parquet"
         mismatch_output_path = os.path.join(mismatch_folder, mismatch_file_name)
         try:
@@ -50,5 +68,6 @@ def validate_schema(
             print(e2)
             
         return False, df
+    
     print("Schema type OK")
     return True, df

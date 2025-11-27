@@ -6,11 +6,18 @@ from scripts.utils import ingest_utils
 from scripts.utils import utils
 from sqlalchemy import inspect
 
-EXPECTED_PRODUCT_SCHEMA = {
+EXPECTED_SCHEMA = {
     'user_id':'object',
     'name':'object',
     'credit_card_number':'int64',
     'issuing_bank':'object',
+}
+
+FINAL_SCHEMA = {
+    "user_id": 'string',
+    "user_name": 'string',
+    "user_ccn": 'string', #hashing makes the int a string
+    "user_issuing_bank": 'string',
 }
 
 # Make this dynamic in the future
@@ -41,6 +48,7 @@ product_ingester = ingest_utils.Ingest(engine = engine,
                                cleaners = cleaners, 
                                file_paths = file_paths, 
                                pattern = pattern,
-                               expected_schema = EXPECTED_PRODUCT_SCHEMA)
+                               expected_schema = EXPECTED_SCHEMA,
+                               final_schema = FINAL_SCHEMA)
 
 product_ingester.ingest()

@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: shopzada
     ports:
-      - "5440:5432"
+      - "5432:5432"
     volumes:
       - ./init:/docker-entrypoint-initdb.d
       - pgdata:/var/lib/postgresql/data

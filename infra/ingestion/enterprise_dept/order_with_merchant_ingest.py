@@ -5,10 +5,16 @@ from scripts.utils import ingest_utils
 from scripts.utils import utils
 from scripts.utils import transform_utils
 
-EXPECTED_PRODUCT_SCHEMA = {
+EXPECTED_SCHEMA = {
     'order_id':'object',
     'merchant_id':'object',
     'staff_id':'object',
+}
+
+FINAL_SCHEMA = {
+    "order_id": 'string',
+    "merchant_id": 'string',
+    "staff_id": 'string',
 }
 
 # Make this dynamic in the future
@@ -33,6 +39,7 @@ product_ingester = ingest_utils.Ingest(engine = engine,
                                cleaners = cleaners, 
                                file_paths = file_paths, 
                                pattern = pattern,
-                               expected_schema = EXPECTED_PRODUCT_SCHEMA)
+                               expected_schema = EXPECTED_SCHEMA,
+                               final_schema = FINAL_SCHEMA)
 
 product_ingester.ingest()

@@ -6,12 +6,18 @@ from scripts.utils import ingest_utils
 from scripts.utils import utils
 from sqlalchemy import inspect
 
-EXPECTED_PRODUCT_SCHEMA = {
-    'Unnamed: 0':'int64',
+EXPECTED_SCHEMA = {
     'campaign_id':'object',
     'campaign_name':'object',
     'campaign_description':'object',
     'discount':'object',
+}
+
+FINAL_SCHEMA = {
+    "campaign_id": 'string',
+    "campaign_name": 'string',
+    "campaign_description": 'string',
+    "campaign_discount": 'float64',
 }
 
 # Make this dynamic in the future
@@ -40,6 +46,7 @@ product_ingester = ingest_utils.Ingest(engine = engine,
                                cleaners = cleaners, 
                                file_paths = file_paths, 
                                pattern = pattern,
-                               expected_schema = EXPECTED_PRODUCT_SCHEMA)
+                               expected_schema = EXPECTED_SCHEMA,
+                               final_schema = FINAL_SCHEMA)
 
 product_ingester.ingest()

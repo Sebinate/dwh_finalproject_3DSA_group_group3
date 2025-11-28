@@ -8,6 +8,7 @@ SELECT DISTINCT s.merchant_id, s.merchant_name, s.merchant_street,
 
 FROM staging.merchant_data AS s
 LEFT JOIN warehouse.dim_merchant_date AS w
-    ON s.merchant_creation_date = w.date_full;
+    ON s.merchant_creation_date = w.date_full
+ON CONFLICT (merchant_id) DO NOTHING;
 
 TRUNCATE TABLE staging.merchant_data;

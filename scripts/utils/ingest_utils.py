@@ -162,5 +162,4 @@ class Ingest:
                 data.to_sql(name = staging_table_name, con = self.engine, if_exists = "append", schema = "staging")
 
 if __name__ == "__main__":
-    data = pkl_reader(r"C:\Users\User\dwh_finalproject_3DSA_group_group3\data\Project Dataset-20241024T131910Z-001\Customer Management Department\user_credit_card.pickle")
-    print(data)
+    pass

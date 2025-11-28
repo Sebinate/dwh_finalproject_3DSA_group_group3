@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_date (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_product (
     product_key           SERIAL PRIMARY KEY,        
-    product_id            VARCHAR(16) NOT NULL,
+    product_id            VARCHAR(16) NOT NULL UNIQUE,
     product_name          VARCHAR(255),
     product_type          VARCHAR(50),
     product_price         NUMERIC(10, 2)
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_product (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_campaign (
     campaign_key          SERIAL PRIMARY KEY,        
-    campaign_id           VARCHAR(16) NOT NULL,
+    campaign_id           VARCHAR(16) NOT NULL UNIQUE,
     campaign_name         VARCHAR(255),
     campaign_desc         VARCHAR(500),
     campaign_discount     NUMERIC(5, 2)
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_campaign (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_staff (
     staff_key             SERIAL PRIMARY KEY,        
-    staff_id              VARCHAR(16) NOT NULL,
+    staff_id              VARCHAR(16) NOT NULL UNIQUE,
     staff_name            VARCHAR(255),
     staff_job_level       VARCHAR(50),
     staff_street          VARCHAR(255),
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_staff (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_user (
     user_key              SERIAL PRIMARY KEY,        
-    user_id               VARCHAR(16) NOT NULL,
+    user_id               VARCHAR(16) NOT NULL UNIQUE,
     user_name             VARCHAR(255),
     user_ccn              VARCHAR(100),           
     user_bank             VARCHAR(100),
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_user (
     user_city             VARCHAR(100),
     user_country          VARCHAR(100),
     user_gender           VARCHAR(10),
-    user_device_type      VARCHAR(100),
+    user_device           VARCHAR(100),
     user_type             VARCHAR(100),
     user_job_title        VARCHAR(100),
     user_job_level        VARCHAR(100),
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_user (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_merchant (
     merchant_key          SERIAL PRIMARY KEY,        
-    merchant_id           VARCHAR(16) NOT NULL,
+    merchant_id           VARCHAR(16) NOT NULL UNIQUE,
     merchant_name         VARCHAR(255),
     merchant_street       VARCHAR(255),
     merchant_state        VARCHAR(100),
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS warehouse.dim_merchant (
 
 CREATE TABLE IF NOT EXISTS warehouse.dim_order (
     order_key                 SERIAL PRIMARY KEY,    
-    order_id                  VARCHAR(100) NOT NULL,       
+    order_id                  VARCHAR(100) NOT NULL UNIQUE,       
     order_estimated_arrival   INT,
     order_transac_date_key INT REFERENCES warehouse.dim_order_date(date_key)
 );

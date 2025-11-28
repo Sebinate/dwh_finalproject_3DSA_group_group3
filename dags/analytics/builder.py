@@ -11,21 +11,19 @@ DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 project_path = os.getenv("PROJECT_HOME")
 
-def create_to_dw_dag(source_name: str, schedule: list, sql_file_name: str):
+def create_analytics_dag(source_name: str, schedule: list, sql_file_name: str):
     default_args = {
         "owner": "airflow"
     }
 
-    ds = Dataset(f"postgres://postgres_default/airflow/dw/{source_name}")
-
-    dag_id = f"{source_name}_to_dw"
+    dag_id = f"{source_name}_analytics"
 
     dag = DAG(
         dag_id = dag_id,
         default_args = default_args,
         schedule = schedule,
         catchup = False,
-        tags = ['to_dw'],
+        tags = ['analytics'],
         start_date=datetime(2020, 1, 1)
     )
 
@@ -37,7 +35,6 @@ def create_to_dw_dag(source_name: str, schedule: list, sql_file_name: str):
             network_mode = "dwh_finalproject_3dsa_group_group3_default",
             docker_url = 'unix://var/run/docker.sock',
             auto_remove = False,
-            outlets = [ds],
             force_pull=False,
             environment = {
                 "DB_HOST": "warehouse_db",

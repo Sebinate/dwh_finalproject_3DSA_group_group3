@@ -5,9 +5,9 @@ INSERT INTO warehouse.dim_user (user_id, user_name, user_ccn, user_bank,
 SELECT DISTINCT ud.user_id, ud.user_name, 
                 COALESCE(ucc.user_ccn, 'None'), COALESCE(ucc.user_issuing_bank, 'None'), 
                 ud.user_street, ud.user_city, ud.user_country, 
-                COALESCE(creation.date_key, -1), ud.user_gender, ud.user_type, 
+                COALESCE(birthdate.date_key, 19000101), ud.user_gender, ud.user_type, 
                 COALESCE(uj.user_job_title, 'None'), COALESCE(uj.user_job_level, 'None'),
-                COALESCE(birthdate.date_key, 19000101), ud.user_device_address
+                COALESCE(creation.date_key, -1), ud.user_device_address
 
 FROM staging.user_data AS ud
 LEFT JOIN staging.user_credit_card AS ucc

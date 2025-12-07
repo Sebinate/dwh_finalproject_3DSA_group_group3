@@ -3,9 +3,9 @@ services:
     image: postgres:13
     container_name: postgres_db
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: shopzada
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
@@ -111,11 +111,11 @@ services:
       context: .
       dockerfile: ./infra/ingestion/Dockerfile
     environment:
-      DB_HOST: warehouse_db
-      DB_USER: admin
-      DB_PASSWORD: mypassword
-      DB_NAME: shopzada
-      DB_PORT: 5432
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
     volumes:
       - ./data:/app/data
     depends_on:
@@ -129,13 +129,31 @@ services:
       context: .
       dockerfile: ./infra/transform_to_dw/Dockerfile
     environment:
-      DB_HOST: warehouse_db
-      DB_USER: admin
-      DB_PASSWORD: mypassword
-      DB_NAME: shopzada
-      DB_PORT: 5432
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
     volumes:
       - ./data:/app/data
+    depends_on:
+      - warehouse_db
+    networks:
+      - dwh_finalproject_3dsa_group_group3_default
+
+  ml-service:
+    image: ShopZada/ml-service:latest
+    build:
+      context: .
+      dockerfile: ./infra/ml/Dockerfile
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+    volumes:
+      - ./artifacts:/app/artifacts
     depends_on:
       - warehouse_db
     networks:

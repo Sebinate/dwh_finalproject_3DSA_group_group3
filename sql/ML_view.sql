@@ -1,6 +1,6 @@
-CREATE VIEW analytics.ML_view_t2023 AS
+CREATE OR REPLACE VIEW analytics.ml_view AS
 SELECT 
-    dates.date_full AS "date",
+    DATE_TRUNC('month', dates.date_full) AS monthly_date,
     users.user_type AS user_type,
     COUNT(orders.order_id) AS order_counts,
     SUM(transactions.price * transactions.quantity) AS revenue,
@@ -18,4 +18,4 @@ LEFT JOIN warehouse.fact_promotion_eligibility AS eligibility
     ON transactions.order_key = eligibility.order_key
 LEFT JOIN warehouse.dim_campaign AS campaign
     ON eligibility.campaign_key = campaign.campaign_key
-GROUP BY "date", user_type;
+GROUP BY monthly_date, user_type;

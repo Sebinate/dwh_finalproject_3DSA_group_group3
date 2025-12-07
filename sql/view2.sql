@@ -1,4 +1,4 @@
-CREATE VIEW analytics.view2 AS 
+CREATE OR REPLACE VIEW analytics.view2 AS 
 SELECT
     campaign_name, campaign_desc, campaign_discount, order_id, dod.date_full AS "date"
 FROM warehouse.fact_promotion_eligibility AS fpe

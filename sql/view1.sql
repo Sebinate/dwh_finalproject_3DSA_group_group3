@@ -1,4 +1,4 @@
-CREATE VIEW analytics.view1 AS
+CREATE OR REPLACE VIEW analytics.view1 AS
 SELECT
     user_id, user_ccn, user_bank, user_gender, user_country, user_type, user_job_title, user_job_level
     merchant_name, merchant_country,

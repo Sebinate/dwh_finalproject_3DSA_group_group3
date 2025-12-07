@@ -153,7 +153,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_PORT: ${DB_PORT}
     volumes:
-      - ./artifacts:/app/data
+      - ./artifacts:/app/artifacts
     depends_on:
       - warehouse_db
     networks:

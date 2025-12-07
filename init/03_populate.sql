@@ -77,7 +77,7 @@ VALUES (-1, 'Unknown', 'Unknown', 'Unknown', 'Unknown', 'Unknown', 'Unknown',
         'Unknown', 'Unknown', 19000101) ON CONFLICT (staff_key) DO NOTHING;
 
 INSERT INTO warehouse.dim_user (user_key, user_id, user_name, user_ccn, user_bank, user_street, user_city, user_country, user_gender, 
-                                user_device_type, user_type, user_job_title, user_job_level, user_birthdate_key, user_creation_date_key)
+                                user_device, user_type, user_job_title, user_job_level, user_birthdate_key, user_creation_date_key)
 
 VALUES (-1, 'Unknown', 'Unknown', 'Unknown', 'Unknown', 'Unknown', 'Unknown', 'Unknown', 'Unknown',
         'Unknown', 'Unknown', 'Unknown', 'Unknown', 19000101, 19000101) ON CONFLICT (user_key) DO NOTHING;

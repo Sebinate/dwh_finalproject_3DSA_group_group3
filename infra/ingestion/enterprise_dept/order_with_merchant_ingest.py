@@ -17,8 +17,8 @@ FINAL_SCHEMA = {
     "staff_id": 'string',
 }
 
-# Make this dynamic in the future
-PATH = r"data/Project Dataset-20241024T131910Z-001/Enterprise Department"
+DATE = os.getenv("TARGET_DATE")
+PATH = f"data/Project Dataset-{DATE}*/Enterprise Department"
 pattern = r"order_with_merchant*"
 
 file_match_path = os.path.join(PATH, pattern)

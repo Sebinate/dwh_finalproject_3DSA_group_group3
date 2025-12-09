@@ -30,8 +30,8 @@ FINAL_SCHEMA = {
     "staff_creation_date": 'datetime64[ns]',
 }
 
-# Make this dynamic in the future
-PATH = r"data/Project Dataset-20241024T131910Z-001/Enterprise Department"
+DATE = os.getenv("TARGET_DATE")
+PATH = f"data/Project Dataset-{DATE}*/Enterprise Department"
 pattern = r"staff_data*"
 
 file_match_path = os.path.join(PATH, pattern)

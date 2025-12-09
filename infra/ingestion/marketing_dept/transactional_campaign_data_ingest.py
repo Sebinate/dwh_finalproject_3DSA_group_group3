@@ -22,8 +22,8 @@ FINAL_SCHEMA = {
     'transact_availed': 'boolean',
 }
 
-# Make this dynamic in the future
-PATH = r"data/Project Dataset-20241024T131910Z-001/Marketing Department"
+DATE = os.getenv("TARGET_DATE")
+PATH = f"data/Project Dataset-{DATE}*/Marketing Department"
 pattern = r"transactional_campaign_data*"
 
 file_match_path = os.path.join(PATH, pattern)

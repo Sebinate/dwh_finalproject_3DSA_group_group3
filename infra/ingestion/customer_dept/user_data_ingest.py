@@ -34,8 +34,8 @@ FINAL_SCHEMA = {
     "user_type": 'string',
 }
 
-# Make this dynamic in the future
-PATH = r"data/Project Dataset-20241024T131910Z-001/Customer Management Department"
+DATE = os.getenv("TARGET_DATE")
+PATH = f"data/Project Dataset-{DATE}*/Customer Management Department"
 pattern = r"user_data*"
 
 file_match_path = os.path.join(PATH, pattern)

@@ -1,6 +1,7 @@
 import pandas as pd
 import pickle as pkl
 import pyarrow.parquet as pq
+import sys
 
 from typing import Iterator
 from bs4 import BeautifulSoup
@@ -93,8 +94,8 @@ class Ingest:
 
     def ingest(self):
         if not self.file_paths:
-            print("No new files found")
-            return
+            print("No file found")
+            sys.exit(1)
         staging_table_name = self.pattern.split("*")[0]
         
         for file_path in self.file_paths:

@@ -7,6 +7,6 @@ from ingestion.builder import create_ingest_dag
 
 dag = create_ingest_dag(
     source_name="transactional_campaign_data",
-    schedule = "@daily",
+    schedule = "0 0 24 10 *",
     department = "marketing_dept"
 )

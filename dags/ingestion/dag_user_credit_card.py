@@ -7,6 +7,6 @@ from ingestion.builder import create_ingest_dag
 
 dag = create_ingest_dag(
     source_name="user_credit_card",
-    schedule = "@daily",
+    schedule = "0 0 24 10 *",
     department = "customer_dept"
 )

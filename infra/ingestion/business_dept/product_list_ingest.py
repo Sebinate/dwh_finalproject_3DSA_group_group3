@@ -20,8 +20,9 @@ FINAL_SCHEMA = {
     "product_type": 'string',
     "product_price": 'float64',
 }
-# Make this dynamic in the future
-PATH = r"data/Project Dataset-20241024T131910Z-001/Business Department"
+
+DATE = os.getenv("TARGET_DATE")
+PATH = f"data/Project Dataset-{DATE}*/Business Department"
 pattern = r"product_list*"
 
 file_match_path = os.path.join(PATH, pattern)

@@ -16,8 +16,8 @@ FINAL_SCHEMA = {
     'order_delay_days': 'Int64',
 }
 
-# Make this dynamic in the future
-PATH = r"data/Project Dataset-20241024T131910Z-001/Operations Department"
+DATE = os.getenv("TARGET_DATE")
+PATH = f"data/Project Dataset-{DATE}*/Operations Department"
 pattern = r"order_delays*"
 
 file_match_path = os.path.join(PATH, pattern)

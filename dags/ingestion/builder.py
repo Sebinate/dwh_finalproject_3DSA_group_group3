@@ -1,10 +1,12 @@
 from airflow.datasets import Dataset
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.sensors.python import PythonSensor
 from airflow.providers.docker.operators.docker import DockerOperator, Mount
-from datetime import datetime
-import os
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
+
+import os
 
 load_dotenv("/opt/airflow/.env")
 
@@ -12,9 +14,12 @@ project_path = os.getenv("PROJECT_HOME")
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 
+
 def create_ingest_dag(source_name: str, schedule: str, department: str):
     default_args = {
-        "owner": "airflow"
+        "owner": "airflow",
+        # "retries": 10,
+        # "retry_delay": timedelta(minutes=10),
     }
 
     ds = Dataset(f"postgres://postgres_default/airflow/staging/{source_name}")
@@ -25,9 +30,10 @@ def create_ingest_dag(source_name: str, schedule: str, department: str):
         dag_id = dag_id,
         default_args = default_args,
         schedule = schedule,
-        catchup = False,
+        catchup = True,
         tags = ['ingestion'],
-        start_date = datetime(2020, 1, 1)
+        start_date = datetime(2023, 10, 24),
+        max_active_runs=1
     )
 
     with dag:
@@ -45,7 +51,8 @@ def create_ingest_dag(source_name: str, schedule: str, department: str):
                 "DB_USER": DB_USER,
                 "DB_PASSWORD": DB_PASSWORD,
                 "DB_NAME": "shopzada",
-                "DB_PORT": "5432"
+                "DB_PORT": "5432",
+                "TARGET_DATE": "{{ data_interval_end | ds_nodash }}"
             },
             mounts=[
                 Mount(source=fr"{project_path}/data", target="/app/data", type="bind"),

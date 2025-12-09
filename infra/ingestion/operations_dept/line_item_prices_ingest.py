@@ -18,8 +18,8 @@ FINAL_SCHEMA = {
     'order_quantity': 'Int64',
 }
 
-# Make this dynamic in the future
-PATH = r"data/Project Dataset-20241024T131910Z-001/Operations Department"
+DATE = os.getenv("TARGET_DATE")
+PATH = F"data/Project Dataset-{DATE}*/Operations Department"
 pattern = r"line_item_data_prices*"
 
 file_match_path = os.path.join(PATH, pattern)

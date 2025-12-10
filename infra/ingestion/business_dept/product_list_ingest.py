@@ -6,7 +6,6 @@ from scripts.utils import schema_utils
 from scripts.utils import utils
 #pre transform
 EXPECTED_SCHEMA = {
-    'Unnamed: 0': 'int64',
     'product_id': 'object',
     'product_name': 'object',
     'product_type': 'object',

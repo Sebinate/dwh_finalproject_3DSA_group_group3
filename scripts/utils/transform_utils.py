@@ -13,6 +13,7 @@ def whitespacedestroyer(text:str) -> str:
 def numberextractinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
     if column in df.columns:
         df[column] = df[column].astype(str).str.replace(r'[^0-9]', '', regex=True)
+    print(f"Len: {df.shape}")
     return df
 
 def floatinator(df: pd.DataFrame, column: str) -> pd.DataFrame: #also removes periods btw
@@ -62,7 +63,7 @@ def datetimeinator(df: pd.DataFrame, column: str) -> pd.DataFrame:
         return
     return df
 
-def unduplicateinator(df: pd.DataFrame, columns) -> pd.DataFrame:
+def unduplicateinator(df: pd.DataFrame, columns = None) -> pd.DataFrame:
     df = df.drop_duplicates(subset=columns)
     return df
 

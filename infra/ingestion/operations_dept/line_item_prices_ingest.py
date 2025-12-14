@@ -28,12 +28,12 @@ file_match_path = os.path.join(PATH, pattern)
 engine = utils.connect()
 
 file_paths = glob.glob(file_match_path, recursive = True)
+print(file_paths)
 
 cleaners = [(transform_utils.columndropinator,),
             (transform_utils.column_renaminator,
             {'price': 'product_price',
             'quantity': 'order_quantity'}),
-            (transform_utils.unduplicateinator, "order_id"),
             (transform_utils.stringinator, "order_id"),
             (transform_utils.floatinator, "product_price"),
             (transform_utils.numberextractinator, "order_quantity"),

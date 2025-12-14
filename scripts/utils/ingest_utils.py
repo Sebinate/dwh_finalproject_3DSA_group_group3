@@ -99,7 +99,9 @@ class Ingest:
         staging_table_name = self.pattern.split("*")[0]
         
         for file_path in self.file_paths:
+            print(file_path)
             file_type = file_path.split(r"\\")[-1].split(".")[-1]
+            print(file_type)
             reader = file_type_reader(file_type)
             
             if file_type == "csv" or file_type == "parquet":
@@ -117,11 +119,7 @@ class Ingest:
                         continue
                         
                     # transformation
-                    for cleaner in self.cleaners:
-                        if len(cleaner) > 1:
-                            batch = cleaner[0](batch, *cleaner[1:])
-                        else:
-                            batch = cleaner[0](batch)
+                    batch = self._apply_cleaners(batch)
                             
                     # post transformation
                     is_valid_post, batch = schema_utils.validate_schema(

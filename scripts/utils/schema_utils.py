@@ -2,6 +2,7 @@ import pandas as pd
 import os
 from datetime import datetime
 from typing import Union, Tuple
+import sys
 
 def validate_schema(
     df: pd.DataFrame, 
@@ -31,6 +32,7 @@ def validate_schema(
         try:
             df.to_parquet(mismatch_output_path, index=False)
             print(f"column name mismatch, saved to {mismatch_output_path}")
+            sys.exit(5)
         except Exception as e:
             print(e)
         return False, df
@@ -46,8 +48,7 @@ def validate_schema(
             df = df.drop(columns=expected_columns, errors='ignore') 
             df = pd.concat([df, df_for_astype], axis=1)
         else:
-             df = df_for_astype
-             
+            df = df_for_astype
 
     except Exception as e:
         print(e)
@@ -60,6 +61,7 @@ def validate_schema(
         try:
             df.to_parquet(mismatch_output_path, index=False)
             print(f"column type mismatch, saved to {mismatch_output_path}")
+            sys.exit(5)
         except Exception as e2:
             print(e2)
             

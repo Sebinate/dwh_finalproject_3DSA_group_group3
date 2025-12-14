@@ -1,14 +1,13 @@
 -- 1. Index the Staging Tables (This makes joins instant)
 CREATE INDEX IF NOT EXISTS idx_stg_prices_order ON staging.line_item_data_prices(order_id);
 CREATE INDEX IF NOT EXISTS idx_stg_delays_order ON staging.order_delays(order_id);
-CREATE INDEX IF NOT EXISTS idx_stg_products_order ON staging.line_item_data_products(order_id); -- WARNING: See note below
+CREATE INDEX IF NOT EXISTS idx_stg_products_order ON staging.line_item_data_products(order_id);
 CREATE INDEX IF NOT EXISTS idx_stg_products_prod ON staging.line_item_data_products(product_id);
 CREATE INDEX IF NOT EXISTS idx_stg_data_order ON staging.order_data(order_id);
 CREATE INDEX IF NOT EXISTS idx_stg_data_user ON staging.order_data(user_id);
 CREATE INDEX IF NOT EXISTS idx_stg_merch_order ON staging.order_with_merchant(order_id);
 
 -- 2. Update Statistics
--- This tells Postgres "Hey, this table has 2 million rows, don't use a Nested Loop join!"
 ANALYZE staging.line_item_data_prices;
 ANALYZE staging.order_delays;
 ANALYZE staging.line_item_data_products;

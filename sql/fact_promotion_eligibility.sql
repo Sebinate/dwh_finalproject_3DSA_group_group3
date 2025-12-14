@@ -3,12 +3,12 @@ INSERT INTO warehouse.fact_promotion_eligibility (
     order_key
 )
 SELECT
-    dim_campaign.campaign_key,                         
-    dim_order.order_key
+    COALESCE(dim_campaign.campaign_key, -1),                         
+    COALESCE(dim_order.order_key, -1)
 FROM (SELECT * 
         FROM staging.transactional_campaign_data AS tcd 
         WHERE tcd.transact_availed = true) AS fpe
-JOIN warehouse.dim_campaign
+LEFT JOIN warehouse.dim_campaign
     ON fpe.campaign_id = warehouse.dim_campaign.campaign_id
 JOIN warehouse.dim_order
     ON fpe.order_id = warehouse.dim_order.order_id;
